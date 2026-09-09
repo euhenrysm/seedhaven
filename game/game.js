@@ -38,10 +38,10 @@
   const INVENTORY_ROWS = 3;
 
   // Coordenadas ajustadas para o layout do seu inventory-bg
-  const INVENTORY_SLOT_START_X = -286;
-  const INVENTORY_SLOT_START_Y = -78;
-  const INVENTORY_SLOT_GAP_X = 65;
-  const INVENTORY_SLOT_GAP_Y = 72;
+  const INVENTORY_SLOT_START_X = -307;
+  const INVENTORY_SLOT_START_Y = -86;
+  const INVENTORY_SLOT_GAP_X = 68.5;
+  const INVENTORY_SLOT_GAP_Y = 74.5;
   const INVENTORY_SLOT_SIZE = 55;
 
   const INVENTORY_SEED_ICON_SIZE = 31;
@@ -904,26 +904,12 @@
             INVENTORY_SLOT_START_Y +
             row * INVENTORY_SLOT_GAP_Y;
 
-          // Asset individual do fundo do item
-          const slot = this.add
-            .image(
-              x,
-              y,
-              "inventory-slot"
-            )
-            .setOrigin(0.5)
-            .setDisplaySize(
-              INVENTORY_SLOT_SIZE,
-              INVENTORY_SLOT_SIZE
-            );
-
-          this.basketPanel.add(slot);
-
+          // Guarda apenas a posição.
+          // O slot-bg só será desenhado quando existir um item nesse espaço.
           this.inventorySlots.push({
             index,
             x,
             y,
-            background: slot,
           });
         }
       }
@@ -1007,6 +993,15 @@
 
       const container =
         this.add.container(slot.x, slot.y);
+
+      // Slot visual aparece apenas onde existe um item.
+      const slotBg = this.add
+        .image(0, 0, "inventory-slot")
+        .setOrigin(0.5)
+        .setDisplaySize(
+          INVENTORY_SLOT_SIZE,
+          INVENTORY_SLOT_SIZE
+        );
 
       const icon = this.add
         .image(0, -2, config.texture)
@@ -1102,6 +1097,7 @@
       }
 
       container.add([
+        slotBg,
         selection,
         icon,
         quantityBg,
