@@ -164,23 +164,23 @@
 
       if (digits === 1) {
         return {
-          x: 94,
-          y: 63,
+          x: 93,
+          y: 62,
           fontSize: "11px",
         };
       }
 
       if (digits === 2) {
         return {
-          x: 94,
-          y: 63,
+          x: 93,
+          y: 62,
           fontSize: "9px",
         };
       }
 
       return {
-        x: 94,
-        y: 63,
+        x: 93,
+        y: 62,
         fontSize: "7px",
       };
     }
