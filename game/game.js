@@ -43,9 +43,10 @@
     }
 
     preload() {
-      // Base visual do terreno. Os demais objetos continuam sendo criados
-      // separadamente pelo Phaser por cima desta imagem.
+      // Assets principais do mundo.
       this.load.image("plot-base", "../public/assets/plots/plot-base.png");
+      this.load.image("game-bg", "../public/assets/backgrounds/game-bg.png");
+      this.load.image("logo", "../public/assets/ui/logo.png");
     }
 
     create() {
@@ -60,11 +61,14 @@
     }
 
     drawWorld() {
-      // Fundo ao redor do terreno.
-      this.cameras.main.setBackgroundColor("#8bcf68");
+      // Background geral do jogo.
+      this.add
+        .image(WIDTH / 2, HEIGHT / 2, "game-bg")
+        .setOrigin(0.5)
+        .setDisplaySize(WIDTH, HEIGHT)
+        .setDepth(-10);
 
-      // A imagem é somente a base do plot.
-      // Plantas, construções, caminhos e decorações serão camadas independentes.
+      // Base do plot.
       this.plotBase = this.add
         .image(WIDTH / 2, HEIGHT / 2, "plot-base")
         .setOrigin(0.5)
@@ -73,20 +77,21 @@
     }
 
     createHud() {
+      // Logo do Seedhaven acima da HUD.
+      this.add
+        .image(115, 35, "logo")
+        .setOrigin(0.5)
+        .setDisplaySize(150, 54)
+        .setDepth(20);
+
       this.add.rectangle(480, 35, 920, 56, 0xffffff, 0.94)
         .setStrokeStyle(1, 0xdce5d4)
-        .setOrigin(0.5);
+        .setOrigin(0.5)
+        .setDepth(10);
 
-      this.add.text(42, 22, "🌱 Seedhaven", {
-        fontFamily: "Arial",
-        fontSize: "22px",
-        fontStyle: "bold",
-        color: "#2f4a2b",
-      });
-
-      this.goldText = this.add.text(345, 23, "", this.hudStyle());
-      this.inventoryText = this.add.text(500, 23, "", this.hudStyle());
-      this.levelText = this.add.text(830, 23, "", this.hudStyle()).setOrigin(1, 0);
+      this.goldText = this.add.text(345, 23, "", this.hudStyle()).setDepth(20);
+      this.inventoryText = this.add.text(500, 23, "", this.hudStyle()).setDepth(20);
+      this.levelText = this.add.text(830, 23, "", this.hudStyle()).setOrigin(1, 0).setDepth(20);
 
       this.xpBarBg = this.add.rectangle(870, 49, 128, 7, 0xdde5d7).setOrigin(1, 0.5);
       this.xpBar = this.add.rectangle(742, 49, 0, 7, 0x5f8f4d).setOrigin(0, 0.5);
