@@ -34,9 +34,9 @@
         .setDepth(-10);
 
       this.plotBase = this.add
-        .image(WIDTH / 2, HEIGHT / 2, "plot-base")
+        .image(WIDTH / 2, HEIGHT / 2 + 20, "plot-base")
         .setOrigin(0.5)
-        .setDisplaySize(540, 540)
+        .setDisplaySize(380, 380)
         .setDepth(0);
     }
 
