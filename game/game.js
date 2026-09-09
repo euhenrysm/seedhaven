@@ -198,14 +198,6 @@
         this.toggleBasket();
       });
 
-      backpack.on("pointerover", () => {
-        backpack.setScale(1.04);
-      });
-
-      backpack.on("pointerout", () => {
-        backpack.setScale(1);
-      });
-
       // Logo do projeto
       this.add
         .image(210, 42, "logo")
