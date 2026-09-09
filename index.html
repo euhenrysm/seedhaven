@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Seedhaven — Build, grow and trade. Official game whitepaper." />
+  <title>Seedhaven — Game Whitepaper</title>
+  <style>
+    :root{
+      --bg:#f7f8f2;--surface:#fff;--soft:#eef3e7;--text:#20251d;
+      --muted:#6f7869;--border:#dde2d6;--green:#4f7d42;--green2:#31572c;
+      --sidebar:280px;--content:860px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+    a{color:inherit;text-decoration:none}
+    .layout{display:flex;min-height:100vh}
+    .sidebar{width:var(--sidebar);position:fixed;inset:0 auto 0 0;background:var(--surface);border-right:1px solid var(--border);padding:28px 22px;overflow:auto}
+    .brand{display:flex;gap:12px;align-items:center;margin-bottom:28px}
+    .mark{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--soft);font-size:24px}
+    .brand strong{display:block;font-size:20px}.brand small{color:var(--muted)}
+    .nav-title{margin:22px 10px 8px;font-size:11px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:#90988b}
+    .nav-link{display:block;padding:9px 10px;border-radius:8px;font-size:14px;color:#4a5147}.nav-link:hover{background:var(--soft);color:var(--green2)}
+    .main{width:100%;margin-left:var(--sidebar)}
+    .topbar{height:70px;position:sticky;top:0;background:rgba(247,248,242,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 36px}
+    .version{border:1px solid var(--border);background:#fff;padding:6px 10px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .content{max-width:var(--content);margin:0 auto;padding:72px 38px 120px}
+    .hero{padding-bottom:58px;border-bottom:1px solid var(--border);margin-bottom:64px}
+    .eyebrow{display:inline-block;background:var(--soft);color:var(--green2);font-weight:700;font-size:13px;padding:7px 11px;border-radius:999px;margin-bottom:22px}
+    h1{font-size:clamp(46px,8vw,76px);line-height:.98;margin:0;letter-spacing:-.055em}
+    h2{font-size:34px;line-height:1.15;letter-spacing:-.035em;margin:0 0 18px}
+    h3{font-size:20px;margin:28px 0 10px}
+    p{color:#4d554a;margin:0 0 16px}
+    .tagline{margin-top:18px;font-size:22px;color:var(--green);font-weight:700}
+    .hero-desc{max-width:670px;font-size:18px;color:var(--muted);margin-top:26px}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px}
+    .card,.currency{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px}
+    section{scroll-margin-top:110px;margin-bottom:70px}
+    .callout{border-left:4px solid var(--green);background:var(--soft);padding:18px 20px;border-radius:0 12px 12px 0;margin:25px 0}
+    .table{overflow:auto;border:1px solid var(--border);border-radius:14px;background:#fff;margin:24px 0}
+    table{width:100%;border-collapse:collapse;min-width:600px}
+    th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--border)} th{background:var(--soft);font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+    tr:last-child td{border-bottom:0}
+    .currency-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .timeline .phase{padding:0 0 24px 20px;border-left:2px solid var(--border)}
+    .timeline .phase:last-child{border-left-color:transparent}
+    .phase small{color:var(--green);font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+    .status{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .status div{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px}.status span{display:block;color:var(--muted);font-size:12px}
+    .play-link{display:inline-block;margin-top:18px;background:var(--green2);color:#fff;padding:12px 16px;border-radius:10px;font-weight:700}
+    footer{border-top:1px solid var(--border);padding-top:28px;margin-top:70px;color:var(--muted);font-size:13px}
+    @media(max-width:900px){.sidebar{display:none}.main{margin-left:0}.content{padding:48px 22px 90px}.topbar{padding:0 20px}}
+    @media(max-width:680px){.grid3,.currency-grid,.status{grid-template-columns:1fr}h1{font-size:52px}h2{font-size:29px}}
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand"><div class="mark">🌱</div><div><strong>Seedhaven</strong><small>Game Whitepaper</small></div></div>
+    <div class="nav-title">Introduction</div>
+    <a class="nav-link" href="#welcome">Welcome</a>
+    <a class="nav-link" href="#vision">Vision</a>
+    <a class="nav-link" href="#gameplay">Gameplay</a>
+    <div class="nav-title">Economy</div>
+    <a class="nav-link" href="#economy">Gold & SHV</a>
+    <div class="nav-title">Web3</div>
+    <a class="nav-link" href="#ronin">Ronin</a>
+    <a class="nav-link" href="#nfts">NFTs</a>
+    <div class="nav-title">Development</div>
+    <a class="nav-link" href="#roadmap">Roadmap</a>
+    <a class="nav-link" href="#status">Status</a>
+  </aside>
+
+  <main class="main">
+    <div class="topbar"><span>Official Seedhaven Documentation</span><span class="version">v0.1</span></div>
+    <div class="content">
+      <section class="hero" id="welcome">
+        <div class="eyebrow">🌱 Early Development</div>
+        <h1>Seedhaven</h1>
+        <div class="tagline">Build, grow and trade.</div>
+        <p class="hero-desc">Seedhaven is a farming game focused on progression, resource management, crafting, exploration and player-driven ownership.</p>
+        <a class="play-link" href="./game/">Play Prototype v0.1 →</a>
+        <div class="grid3">
+          <div class="card">🏡 <strong>Build</strong><br><small>Develop and customize your farm.</small></div>
+          <div class="card">🌾 <strong>Grow</strong><br><small>Plant, harvest and progress.</small></div>
+          <div class="card">🤝 <strong>Trade</strong><br><small>Participate in a player-driven economy.</small></div>
+        </div>
+      </section>
+
+      <section id="vision">
+        <h2>Our Vision</h2>
+        <p>Seedhaven is designed to be a game first. Players begin with a small piece of land and gradually transform it through farming, resource collection, upgrades, crafting and new discoveries.</p>
+        <div class="callout"><strong>Core principle:</strong> players should be able to enjoy Seedhaven without needing previous knowledge of cryptocurrency, wallets or blockchain technology.</div>
+      </section>
+
+      <section id="gameplay">
+        <h2>Gameplay Philosophy</h2>
+        <p>The core loop is:</p>
+        <div class="callout"><strong>Buy → Plant → Water → Grow → Harvest → Sell → Level Up → Unlock</strong></div>
+
+        <h3>First 5 minutes</h3>
+        <p>The player starts with 4 farming plots, 100 Gold, a Watering Can, a Farm Shop, Farm Stand and inventory.</p>
+        <div class="table">
+          <table>
+            <thead><tr><th>Crop</th><th>Seed Price</th><th>Growth</th><th>Sell Price</th><th>Unlock</th></tr></thead>
+            <tbody>
+              <tr><td>🌻 Sunflower</td><td>5 Gold</td><td>30 sec</td><td>10 Gold</td><td>Level 1</td></tr>
+              <tr><td>🥔 Potato</td><td>10 Gold</td><td>2 min</td><td>22 Gold</td><td>Level 2</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>During the tutorial, the player buys 4 Sunflower Seeds, plants, waters, collects 2 Wood while waiting, harvests the crops, sells them and reaches Level 2.</p>
+      </section>
+
+      <section id="economy">
+        <h2>Seedhaven Economy</h2>
+        <p>Seedhaven uses a dual-currency model so normal farming does not continuously create blockchain tokens.</p>
+        <div class="currency-grid">
+          <div class="currency"><h3>🪙 Gold</h3><p>Main off-chain gameplay currency.</p><ul><li>Seeds</li><li>Buildings</li><li>Crafting</li><li>Upgrades</li><li>Farm expansion</li></ul></div>
+          <div class="currency"><h3>🌱 Seedhaven Coin — SHV</h3><p>Planned on-chain ecosystem currency.</p><ul><li>Ronin Network</li><li>Selected NFT utility</li><li>Marketplace activity</li><li>Controlled distribution</li><li>Tokenomics TBD</li></ul></div>
+        </div>
+        <div class="callout"><strong>No automatic Gold → SHV conversion is currently planned.</strong></div>
+      </section>
+
+      <section id="ronin">
+        <h2>Ronin Network</h2>
+        <p>Seedhaven plans to use Ronin for selected blockchain functionality. Common gameplay data such as crops, Gold, Wood, Stone and XP remains off-chain.</p>
+      </section>
+
+      <section id="nfts">
+        <h2>NFTs</h2>
+        <p>Potential NFT categories include special land assets, rare animals or pets, cosmetics, collectibles, event rewards and special buildings or decorations.</p>
+        <p>Not every item needs to become an NFT.</p>
+      </section>
+
+      <section id="roadmap">
+        <h2>Development Roadmap</h2>
+        <div class="timeline">
+          <div class="phase"><small>Phase 1</small><h3>Core Farming</h3><p>Planting, watering, growth, harvesting, selling, Gold, XP, levels and tutorial.</p></div>
+          <div class="phase"><small>Phase 2</small><h3>Farm Progression</h3><p>More crops, Wood, Stone, crafting, buildings and farm expansion.</p></div>
+          <div class="phase"><small>Phase 3</small><h3>Living Farm</h3><p>Animals, quests, events, collections and social systems.</p></div>
+          <div class="phase"><small>Phase 4</small><h3>Ronin Integration</h3><p>Wallet integration, NFTs and ownership systems.</p></div>
+          <div class="phase"><small>Phase 5</small><h3>Seedhaven Economy</h3><p>SHV distribution, marketplace systems, rewards and utility.</p></div>
+        </div>
+      </section>
+
+      <section id="status">
+        <h2>Seedhaven Today</h2>
+        <div class="status">
+          <div><span>Game</span><strong>Seedhaven</strong></div>
+          <div><span>Slogan</span><strong>Build, grow and trade.</strong></div>
+          <div><span>Gameplay Currency</span><strong>Gold</strong></div>
+          <div><span>Ecosystem Currency</span><strong>Seedhaven Coin — SHV</strong></div>
+          <div><span>Blockchain</span><strong>Ronin</strong></div>
+          <div><span>Stage</span><strong>Early Design & Prototyping</strong></div>
+        </div>
+      </section>
+
+      <footer>
+        <strong>Seedhaven</strong><br>Build, grow and trade.<br><br>
+        Game Whitepaper v0.1 — mechanics and economy values may change during development.
+      </footer>
+    </div>
+  </main>
+</div>
+</body>
+</html>
