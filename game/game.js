@@ -164,7 +164,7 @@
 
       if (digits === 1) {
         return {
-          x: 92,
+          x: 94,
           y: 63,
           fontSize: "11px",
         };
@@ -172,14 +172,14 @@
 
       if (digits === 2) {
         return {
-          x: 92,
+          x: 94,
           y: 63,
           fontSize: "9px",
         };
       }
 
       return {
-        x: 92,
+        x: 94,
         y: 63,
         fontSize: "7px",
       };
