@@ -7,8 +7,8 @@
   const PLOT_SIZE = 380;
   const PLOT_Y_OFFSET = 20;
 
-  const GRID_COLS = 10;
-  const GRID_ROWS = 10;
+  const GRID_COLS = 20;
+  const GRID_ROWS = 20;
   const CELL_WIDTH = PLOT_SIZE / GRID_COLS;
   const CELL_HEIGHT = PLOT_SIZE / GRID_ROWS;
 
