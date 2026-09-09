@@ -159,6 +159,32 @@
       });
     }
 
+    getLevelBadgeConfig(level) {
+      const digits = String(level).length;
+
+      if (digits === 1) {
+        return {
+          x: 92,
+          y: 63,
+          fontSize: "11px",
+        };
+      }
+
+      if (digits === 2) {
+        return {
+          x: 92,
+          y: 63,
+          fontSize: "9px",
+        };
+      }
+
+      return {
+        x: 92,
+        y: 63,
+        fontSize: "7px",
+      };
+    }
+
     createHud() {
       // Barra superior
       this.add
@@ -183,14 +209,21 @@
         .setInteractive({ useHandCursor: true });
 
       // Número do level sobre a plaquinha do asset
+      const levelConfig = this.getLevelBadgeConfig(state.level);
+
       this.levelText = this.add
-        .text(93, 64, `${state.level}`, {
-          fontFamily: FONT_FAMILY,
-          fontSize: "12px",
-          fontStyle: "bold",
-          color: "#3b2417",
-          align: "center",
-        })
+        .text(
+          levelConfig.x,
+          levelConfig.y,
+          `${state.level}`,
+          {
+            fontFamily: FONT_FAMILY,
+            fontSize: levelConfig.fontSize,
+            fontStyle: "bold",
+            color: "#3b2417",
+            align: "center",
+          }
+        )
         .setOrigin(0.5)
         .setDepth(31);
 
@@ -210,7 +243,7 @@
         .text(470, 42, `🪙 ${state.gold} Gold`, {
           fontFamily: FONT_FAMILY,
           fontSize: "18px",
-          fontStyle: "600",
+          fontStyle: "bold",
           color: "#3b4938",
         })
         .setOrigin(0.5)
@@ -221,7 +254,7 @@
         .text(875, 42, `${state.xp} XP`, {
           fontFamily: FONT_FAMILY,
           fontSize: "17px",
-          fontStyle: "600",
+          fontStyle: "bold",
           color: "#3b4938",
         })
         .setOrigin(1, 0.5)
