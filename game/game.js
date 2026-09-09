@@ -638,23 +638,23 @@
 
       if (digits === 1) {
         return {
-          x: 94,
-          y: 63,
+          x: 101,
+          y: 59,
           fontSize: "10px",
         };
       }
 
       if (digits === 2) {
         return {
-          x: 94,
-          y: 63,
+          x: 101,
+          y: 59,
           fontSize: "8px",
         };
       }
 
       return {
-        x: 94,
-        y: 63,
+        x: 101,
+        y: 59,
         fontSize: "7px",
       };
     }
