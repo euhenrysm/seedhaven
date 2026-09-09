@@ -42,6 +42,12 @@
       this.toast = null;
     }
 
+    preload() {
+      // Base visual do terreno. Os demais objetos continuam sendo criados
+      // separadamente pelo Phaser por cima desta imagem.
+      this.load.image("plot-base", "../public/assets/plots/plot-base.png");
+    }
+
     create() {
       this.cameras.main.setBackgroundColor("#9fc96d");
       this.drawWorld();
@@ -54,41 +60,16 @@
     }
 
     drawWorld() {
-      const g = this.add.graphics();
+      // Fundo ao redor do terreno.
+      this.cameras.main.setBackgroundColor("#8bcf68");
 
-      // Grass
-      g.fillStyle(0xa7cc75, 1);
-      g.fillRect(0, 0, WIDTH, HEIGHT);
-
-      // Subtle grass strips
-      g.fillStyle(0x9cc267, 0.5);
-      for (let y = 90; y < 440; y += 48) {
-        g.fillRect(0, y, WIDTH, 2);
-      }
-
-      // Dirt farming zone
-      g.fillStyle(0xd8b06e, 1);
-      g.fillRoundedRect(298, 116, 380, 316, 26);
-      g.lineStyle(4, 0xc79a59, 1);
-      g.strokeRoundedRect(298, 116, 380, 316, 26);
-
-      // Path
-      g.fillStyle(0xe4cf9b, 1);
-      g.fillRoundedRect(60, 370, 220, 56, 22);
-      g.fillRoundedRect(682, 370, 220, 56, 22);
-
-      // Decorative pond
-      g.fillStyle(0x7bc3cf, 1);
-      g.fillEllipse(823, 151, 120, 82);
-      g.lineStyle(5, 0x6aaeba, 1);
-      g.strokeEllipse(823, 151, 120, 82);
-
-      // Fence
-      g.lineStyle(7, 0x8f633b, 1);
-      g.lineBetween(20, 84, 940, 84);
-      for (let x = 26; x <= 930; x += 60) {
-        g.lineBetween(x, 69, x, 99);
-      }
+      // A imagem é somente a base do plot.
+      // Plantas, construções, caminhos e decorações serão camadas independentes.
+      this.plotBase = this.add
+        .image(WIDTH / 2, HEIGHT / 2, "plot-base")
+        .setOrigin(0.5)
+        .setDisplaySize(540, 540)
+        .setDepth(0);
     }
 
     createHud() {
@@ -691,8 +672,8 @@
       autoCenter: Phaser.Scale.CENTER_BOTH,
     },
     render: {
-      antialias: true,
-      pixelArt: false,
+      antialias: false,
+      pixelArt: true,
     },
   });
 })();
