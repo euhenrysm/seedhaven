@@ -184,11 +184,11 @@
 
       // Número do level sobre a plaquinha do asset
       this.levelText = this.add
-        .text(99, 74, `${state.level}`, {
+        .text(93, 64, `${state.level}`, {
           fontFamily: FONT_FAMILY,
-          fontSize: "17px",
+          fontSize: "12px",
           fontStyle: "bold",
-          color: "#2b1b15",
+          color: "#3b2417",
           align: "center",
         })
         .setOrigin(0.5)
