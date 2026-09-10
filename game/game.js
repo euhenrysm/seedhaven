@@ -707,37 +707,37 @@
       this.goldText = this.add
         .text(
           72,
-          103,
+          104,
           `${state.gold} Gold`,
           {
             fontFamily: FONT_FAMILY,
-            fontSize: "15px",
+            fontSize: "18px",
             fontStyle: "bold",
-            color: "#23351f",
-            stroke: "#f4edd8",
-            strokeThickness: 3,
+            color: "#ffffff",
+            stroke: "#172417",
+            strokeThickness: 4,
           }
         )
         .setOrigin(0.5)
-        .setResolution(2)
+        .setResolution(4)
         .setDepth(30);
 
       this.xpText = this.add
         .text(
           72,
-          121,
+          128,
           `${state.xp} XP`,
           {
             fontFamily: FONT_FAMILY,
-            fontSize: "14px",
+            fontSize: "17px",
             fontStyle: "bold",
-            color: "#23351f",
-            stroke: "#f4edd8",
-            strokeThickness: 3,
+            color: "#ffffff",
+            stroke: "#172417",
+            strokeThickness: 4,
           }
         )
         .setOrigin(0.5)
-        .setResolution(2)
+        .setResolution(4)
         .setDepth(30);
 
       this.createQuickbar();
@@ -777,15 +777,15 @@
             `${i + 1}`,
             {
               fontFamily: FONT_FAMILY,
-              fontSize: "11px",
+              fontSize: "14px",
               fontStyle: "bold",
-              color: "#3a241d",
-              stroke: "#ffe7bd",
-              strokeThickness: 2,
+              color: "#2f1d16",
+              stroke: "#fff0cf",
+              strokeThickness: 3,
             }
           )
           .setOrigin(0.5)
-          .setResolution(2)
+          .setResolution(4)
           .setDepth(34);
 
         const selection = this.add
@@ -822,7 +822,7 @@
             "",
             {
               fontFamily: FONT_FAMILY,
-              fontSize: "11px",
+              fontSize: "13px",
               fontStyle: "bold",
               color: "#2f1d16",
               backgroundColor: "rgba(255,255,255,0.90)",
@@ -1017,35 +1017,37 @@
           "Basket",
           {
             fontFamily: FONT_FAMILY,
-            fontSize: "22px",
+            fontSize: "27px",
             fontStyle: "bold",
-            color: "#4a281d",
+            color: "#34190f",
+            stroke: "#f0a568",
+            strokeThickness: 1,
           }
         )
         .setOrigin(0, 0.5)
-        .setResolution(2);
+        .setResolution(4);
 
       const closeText = this.add
         .text(
-          343,
-          -176,
+          341,
+          -181,
           "X",
           {
             fontFamily: FONT_FAMILY,
-            fontSize: "21px",
+            fontSize: "26px",
             fontStyle: "bold",
-            color: "#4a281d",
+            color: "#34190f",
           }
         )
         .setOrigin(0.5)
-        .setResolution(2);
+        .setResolution(4);
 
       const closeHit = this.add
         .rectangle(
-          343,
-          -176,
-          42,
-          42,
+          341,
+          -181,
+          46,
+          46,
           0xffffff,
           0.001
         )
@@ -1204,14 +1206,14 @@
         .rectangle(
           18,
           18,
-          23,
-          16,
-          0xffffff,
-          0.96
+          27,
+          20,
+          0xfff4dd,
+          1
         )
         .setStrokeStyle(
-          1,
-          0x8e5a3c,
+          2,
+          0x5c3425,
           1
         );
 
@@ -1222,13 +1224,13 @@
           "",
           {
             fontFamily: FONT_FAMILY,
-            fontSize: "12px",
+            fontSize: "15px",
             fontStyle: "bold",
-            color: "#2f1d16",
+            color: "#24120d",
           }
         )
         .setOrigin(0.5)
-        .setResolution(2);
+        .setResolution(4);
 
       const selection = this.add
         .rectangle(
