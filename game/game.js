@@ -70,6 +70,22 @@
   const QUICK_ACCESS_BUTTON_Y = 18;
 
   // =========================
+  // GOTA D'ÁGUA (indica planta que precisa ser regada)
+  // =========================
+  const WATER_DROP_SIZE = 11;
+  const WATER_DROP_OFFSET_X = 11;
+  const WATER_DROP_OFFSET_Y = -14;
+
+  // =========================
+  // PAINEL DE INFORMAÇÃO DA PLANTA (clique direito na plantação)
+  // =========================
+  const CROP_INFO_WIDTH = 168;
+  const CROP_INFO_HEIGHT = 88;
+  const CROP_INFO_OFFSET_X = 70;
+  const CROP_INFO_OFFSET_Y = -40;
+  const CROP_INFO_UPDATE_MS = 200;
+
+  // =========================
   // CROPS
   // =========================
   const CROPS = {
@@ -126,6 +142,9 @@
       this.basketPanel = null;
       this.inventorySlots = [];
       this.inventoryItemViews = {};
+
+      this.cropInfoPanel = null;
+      this.cropInfoTimer = null;
 
       this.quickbarViews = [];
       this.quickAccessMenu = null;
@@ -347,7 +366,16 @@
             }
           });
 
-          cell.on("pointerdown", () => {
+          cell.on("pointerdown", (pointer) => {
+            const isRightClick =
+              pointer.rightButtonDown && pointer.rightButtonDown();
+
+            if (isRightClick && cell.occupied && cell.object && cell.object.type === "crop") {
+              this.showCropInfoPanel(cell);
+              return;
+            }
+
+            this.hideCropInfoPanel();
             this.handleCellClick(cell);
           });
 
@@ -415,6 +443,11 @@
         .setDisplaySize(CROP_RENDER_SIZE, CROP_RENDER_SIZE)
         .setDepth(8);
 
+      const waterDrop = this.createWaterDropIcon(
+        cell.x + WATER_DROP_OFFSET_X,
+        cell.y + WATER_DROP_OFFSET_Y
+      );
+
       cell.occupied = true;
 
       cell.object = {
@@ -423,12 +456,34 @@
         stage: 1,
         watered: false,
         sprite,
+        waterDrop,
+        plantedAt: this.time.now,
+        wateredAt: null,
         stageTwoTimer: null,
         readyTimer: null,
       };
 
       this.refreshInventoryUI();
       this.refreshQuickbar();
+    }
+
+    // Desenha um pequeno ícone de gota d'água (sem depender de asset externo).
+    createWaterDropIcon(x, y) {
+      const r = WATER_DROP_SIZE / 2;
+
+      const gfx = this.add.graphics({ x, y }).setDepth(9);
+      gfx.fillStyle(0x4fc3f7, 1);
+      gfx.lineStyle(1, 0x0d5c8a, 1);
+      gfx.beginPath();
+      gfx.moveTo(0, -r * 1.3);
+      gfx.lineTo(r, r * 0.3);
+      gfx.arc(0, r * 0.3, r, 0, Math.PI, false);
+      gfx.lineTo(-r, r * 0.3);
+      gfx.closePath();
+      gfx.fillPath();
+      gfx.strokePath();
+
+      return gfx;
     }
 
     waterCrop(cell) {
@@ -443,6 +498,12 @@
       }
 
       cropObject.watered = true;
+      cropObject.wateredAt = this.time.now;
+
+      if (cropObject.waterDrop) {
+        cropObject.waterDrop.destroy();
+        cropObject.waterDrop = null;
+      }
 
       const cropConfig = CROPS[cropObject.crop];
 
@@ -499,6 +560,12 @@
         cropObject.sprite.destroy();
       }
 
+      if (cropObject.waterDrop) {
+        cropObject.waterDrop.destroy();
+      }
+
+      this.hideCropInfoPanel();
+
       cell.object = null;
       cell.occupied = false;
 
@@ -509,7 +576,106 @@
     }
 
     // =========================
-    // LEVEL BADGE
+    // PAINEL DE INFO DA PLANTAÇÃO (clique direito)
+    // =========================
+    showCropInfoPanel(cell) {
+      this.hideCropInfoPanel();
+
+      const cropObject = cell.object;
+      const cropConfig = CROPS[cropObject.crop];
+
+      const flipLeft = cell.x + CROP_INFO_OFFSET_X + CROP_INFO_WIDTH / 2 > WIDTH - 10;
+      const panelX = cell.x + (flipLeft ? -CROP_INFO_OFFSET_X : CROP_INFO_OFFSET_X);
+
+      const panel = this.add
+        .container(panelX, cell.y + CROP_INFO_OFFSET_Y)
+        .setDepth(270);
+
+      const bg = this.add
+        .rectangle(0, 0, CROP_INFO_WIDTH, CROP_INFO_HEIGHT, 0xfff4dd, 0.97)
+        .setStrokeStyle(2, 0x75462f, 1)
+        .setInteractive();
+
+      bg.on("pointerdown", () => this.hideCropInfoPanel());
+
+      const nameText = this.add
+        .text(0, -CROP_INFO_HEIGHT / 2 + 16, cropConfig.name, {
+          fontFamily: FONT_FAMILY,
+          fontSize: "15px",
+          fontStyle: "bold",
+          color: "#3a241d",
+        })
+        .setOrigin(0.5)
+        .setResolution(3);
+
+      const statusText = this.add
+        .text(0, 6, "", {
+          fontFamily: FONT_FAMILY,
+          fontSize: "12px",
+          color: "#3a241d",
+          align: "center",
+          lineSpacing: 6,
+        })
+        .setOrigin(0.5)
+        .setResolution(3);
+
+      panel.add([bg, nameText, statusText]);
+
+      const updateText = () => {
+        if (!cell.object || cell.object !== cropObject) {
+          this.hideCropInfoPanel();
+          return;
+        }
+
+        statusText.setText(this.buildCropInfoLines(cropObject, cropConfig));
+      };
+
+      updateText();
+
+      this.cropInfoPanel = panel;
+      this.cropInfoTimer = this.time.addEvent({
+        delay: CROP_INFO_UPDATE_MS,
+        loop: true,
+        callback: updateText,
+      });
+    }
+
+    buildCropInfoLines(cropObject, cropConfig) {
+      const lines = [`Estágio: ${cropObject.stage}/3`];
+
+      if (cropObject.stage === 3) {
+        lines.push("Pronta para colher!");
+        return lines.join("\n");
+      }
+
+      if (!cropObject.watered) {
+        lines.push("Regada: Não");
+        lines.push("Regue para começar a crescer");
+        return lines.join("\n");
+      }
+
+      const remainingMs = Math.max(
+        0,
+        cropObject.wateredAt + cropConfig.readyMs - this.time.now
+      );
+      const remainingSec = Math.ceil(remainingMs / 1000);
+
+      lines.push("Regada: Sim");
+      lines.push(`Pronta em: ${remainingSec}s`);
+      return lines.join("\n");
+    }
+
+    hideCropInfoPanel() {
+      if (this.cropInfoTimer) {
+        this.cropInfoTimer.remove(false);
+        this.cropInfoTimer = null;
+      }
+
+      if (this.cropInfoPanel) {
+        this.cropInfoPanel.destroy();
+        this.cropInfoPanel = null;
+      }
+    }
     // MANTER ESTES VALORES
     // =========================
     getLevelBadgeConfig(level) {
@@ -659,12 +825,12 @@
 
         const quantityText = this.add
           .text(
-            QUICKBAR_X + 13,
-            y + 13,
+            QUICKBAR_X + 12,
+            y + 12,
             "",
             {
               fontFamily: FONT_FAMILY,
-              fontSize: "13px",
+              fontSize: "14px",
               fontStyle: "bold",
               color: "#2f1d16",
               backgroundColor: "rgba(255,255,255,0.90)",
@@ -844,6 +1010,7 @@
       this.basketPanel.add([overlay, inventoryBg, title, closeText, closeHit]);
 
       this.createInventorySlots();
+      this.createSlotBackgrounds();
       this.createInventoryItems();
 
       closeHit.on("pointerdown", () => {
@@ -879,6 +1046,19 @@
           this.inventorySlots.push({ index, x, y });
         }
       }
+    }
+
+    // Desenha o fundo de TODOS os slots (vazios inclusive), para o Basket
+    // parecer um grid de inventário de verdade em vez de um painel vazio.
+    createSlotBackgrounds() {
+      const backgrounds = this.inventorySlots.map((slot) =>
+        this.add
+          .image(slot.x, slot.y, "inventory-slot")
+          .setOrigin(0.5)
+          .setDisplaySize(INVENTORY_SLOT_SIZE, INVENTORY_SLOT_SIZE)
+      );
+
+      this.basketPanel.add(backgrounds);
     }
 
     createInventoryItems() {
@@ -962,26 +1142,21 @@
       const container =
         this.add.container(slot.x, slot.y);
 
-      const slotBg = this.add
-        .image(0, 0, "inventory-slot")
-        .setOrigin(0.5)
-        .setDisplaySize(INVENTORY_SLOT_SIZE, INVENTORY_SLOT_SIZE);
-
       const icon = this.add
         .image(0, -2, config.texture)
         .setOrigin(0.5)
         .setDisplaySize(config.iconSize, config.iconSize);
 
       const quantityBg = this.add
-        .rectangle(18, 18, 27, 20, 0xfff4dd, 1)
+        .rectangle(14, 14, 26, 19, 0xfff4dd, 1)
         .setStrokeStyle(2, 0x5c3425, 1);
 
       const quantityText = this.add
         .text(
-          18,
-          18,
+          14,
+          14,
           "",
-          { fontFamily: FONT_FAMILY, fontSize: "15px", fontStyle: "bold", color: "#24120d" }
+          { fontFamily: FONT_FAMILY, fontSize: "16px", fontStyle: "bold", color: "#24120d" }
         )
         .setOrigin(0.5)
         .setResolution(4);
@@ -1025,11 +1200,11 @@
         );
       }
 
-      container.add([slotBg, selection, icon, quantityBg, quantityText, hit]);
+      container.add([selection, icon, quantityBg, quantityText, hit]);
 
       this.basketPanel.add(container);
 
-      this.inventoryItemViews[config.key] = { ...config, container, slotBg, icon, quantityBg, quantityText, selection };
+      this.inventoryItemViews[config.key] = { ...config, container, icon, quantityBg, quantityText, selection };
     }
 
     showQuickAccessMenu(x, y, config) {
@@ -1157,6 +1332,8 @@
 
     toggleBasket(forceState) {
       if (!this.basketPanel) return;
+
+      this.hideCropInfoPanel();
 
       const shouldShow =
         typeof forceState === "boolean"
