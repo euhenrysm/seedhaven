@@ -57,6 +57,19 @@
   const QUICKBAR_ICON_SIZE = 25;
 
   // =========================
+  // MENU DE ACESSO RÁPIDO (clique direito num item do Basket)
+  // =========================
+  const QUICK_ACCESS_MENU_OFFSET_X = 102;
+  const QUICK_ACCESS_MENU_OFFSET_Y = 22;
+  const QUICK_ACCESS_PANEL_WIDTH = 170;
+  const QUICK_ACCESS_PANEL_HEIGHT = 95;
+  const QUICK_ACCESS_LABEL_Y = -28;
+  const QUICK_ACCESS_BUTTON_SIZE = 24;
+  const QUICK_ACCESS_BUTTON_GAP = 29;
+  const QUICK_ACCESS_BUTTON_START_X = -58;
+  const QUICK_ACCESS_BUTTON_Y = 18;
+
+  // =========================
   // CROPS
   // =========================
   const CROPS = {
@@ -64,11 +77,7 @@
       name: "Carrot",
       seedIcon: "carrot-seed-icon",
       cropIcon: "carrot-icon",
-      stages: [
-        "carrot-stage-1",
-        "carrot-stage-2",
-        "carrot-stage-3",
-      ],
+      stages: ["carrot-stage-1", "carrot-stage-2", "carrot-stage-3"],
       stage2Ms: 5_000,
       readyMs: 10_000,
     },
@@ -77,11 +86,7 @@
       name: "Wheat",
       seedIcon: "wheat-seed-icon",
       cropIcon: "wheat-icon",
-      stages: [
-        "wheat-stage-1",
-        "wheat-stage-2",
-        "wheat-stage-3",
-      ],
+      stages: ["wheat-stage-1", "wheat-stage-2", "wheat-stage-3"],
       stage2Ms: 7_000,
       readyMs: 14_000,
     },
@@ -90,11 +95,7 @@
       name: "Sunflower",
       seedIcon: "sunflower-seed-icon",
       cropIcon: "sunflower-icon",
-      stages: [
-        "sunflower-stage-1",
-        "sunflower-stage-2",
-        "sunflower-stage-3",
-      ],
+      stages: ["sunflower-stage-1", "sunflower-stage-2", "sunflower-stage-3"],
       stage2Ms: 9_000,
       readyMs: 18_000,
     },
@@ -108,32 +109,11 @@
     xp: 0,
     level: 1,
 
-    selectedItem: {
-      type: "seed",
-      crop: "carrot",
-    },
+    selectedItem: { type: "seed", crop: "carrot" },
 
-    quickSlots: [
-      null,
-      null,
-      null,
-      null,
-      null,
-    ],
+    quickSlots: [null, null, null, null, null],
 
-    inventory: {
-      seeds: {
-        carrot: 5,
-        wheat: 5,
-        sunflower: 5,
-      },
-
-      crops: {
-        carrot: 0,
-        wheat: 0,
-        sunflower: 0,
-      },
-    },
+    inventory: { seeds: { carrot: 5, wheat: 5, sunflower: 5 }, crops: { carrot: 0, wheat: 0, sunflower: 0 } },
   };
 
   class SeedhavenScene extends Phaser.Scene {
@@ -153,123 +133,57 @@
 
     preload() {
       // Mundo
-      this.load.image(
-        "plot-base",
-        "../public/assets/plots/plot-base.png"
-      );
+      this.load.image("plot-base", "../public/assets/plots/plot-base.png");
 
-      this.load.image(
-        "game-bg",
-        "../public/assets/backgrounds/game-bg.png"
-      );
+      this.load.image("game-bg", "../public/assets/backgrounds/game-bg.png");
 
       // HUD
-      this.load.image(
-        "logo",
-        "../public/assets/ui/logo.png"
-      );
+      this.load.image("logo", "../public/assets/ui/logo.png");
 
-      this.load.image(
-        "backpack-level",
-        "../public/assets/ui/backpack-level.png"
-      );
+      this.load.image("backpack-level", "../public/assets/ui/backpack-level.png");
 
       // Inventário
-      this.load.image(
-        "inventory-bg",
-        "../public/assets/ui/inventory/inventory-bg.png"
-      );
+      this.load.image("inventory-bg", "../public/assets/ui/inventory/inventory-bg.png");
 
-      this.load.image(
-        "inventory-slot",
-        "../public/assets/ui/inventory/inventory-slot.png"
-      );
+      this.load.image("inventory-slot", "../public/assets/ui/inventory/inventory-slot.png");
 
       // Sementes
-      this.load.image(
-        "carrot-seed-icon",
-        "../public/assets/items/seeds/carrot-seed-icon.png"
-      );
+      this.load.image("carrot-seed-icon", "../public/assets/items/seeds/carrot-seed-icon.png");
 
-      this.load.image(
-        "wheat-seed-icon",
-        "../public/assets/items/seeds/wheat-seed-icon.png"
-      );
+      this.load.image("wheat-seed-icon", "../public/assets/items/seeds/wheat-seed-icon.png");
 
-      this.load.image(
-        "sunflower-seed-icon",
-        "../public/assets/items/seeds/sunflower-seed-icon.png"
-      );
+      this.load.image("sunflower-seed-icon", "../public/assets/items/seeds/sunflower-seed-icon.png");
 
       // Colheitas
-      this.load.image(
-        "carrot-icon",
-        "../public/assets/items/crops/carrot-icon.png"
-      );
+      this.load.image("carrot-icon", "../public/assets/items/crops/carrot-icon.png");
 
-      this.load.image(
-        "wheat-icon",
-        "../public/assets/items/crops/wheat-icon.png"
-      );
+      this.load.image("wheat-icon", "../public/assets/items/crops/wheat-icon.png");
 
-      this.load.image(
-        "sunflower-icon",
-        "../public/assets/items/crops/sunflower-icon.png"
-      );
+      this.load.image("sunflower-icon", "../public/assets/items/crops/sunflower-icon.png");
 
       // Ferramentas
-      this.load.image(
-        "watering-can-icon",
-        "../public/assets/items/tools/watering-can.png"
-      );
+      this.load.image("watering-can-icon", "../public/assets/items/tools/watering-can.png");
 
       // Carrot
-      this.load.image(
-        "carrot-stage-1",
-        "../public/assets/crops/carrot/carrot-stage-1.png"
-      );
+      this.load.image("carrot-stage-1", "../public/assets/crops/carrot/carrot-stage-1.png");
 
-      this.load.image(
-        "carrot-stage-2",
-        "../public/assets/crops/carrot/carrot-stage-2.png"
-      );
+      this.load.image("carrot-stage-2", "../public/assets/crops/carrot/carrot-stage-2.png");
 
-      this.load.image(
-        "carrot-stage-3",
-        "../public/assets/crops/carrot/carrot-stage-3.png"
-      );
+      this.load.image("carrot-stage-3", "../public/assets/crops/carrot/carrot-stage-3.png");
 
       // Wheat
-      this.load.image(
-        "wheat-stage-1",
-        "../public/assets/crops/wheat/wheat-stage-1.png"
-      );
+      this.load.image("wheat-stage-1", "../public/assets/crops/wheat/wheat-stage-1.png");
 
-      this.load.image(
-        "wheat-stage-2",
-        "../public/assets/crops/wheat/wheat-stage-2.png"
-      );
+      this.load.image("wheat-stage-2", "../public/assets/crops/wheat/wheat-stage-2.png");
 
-      this.load.image(
-        "wheat-stage-3",
-        "../public/assets/crops/wheat/wheat-stage-3.png"
-      );
+      this.load.image("wheat-stage-3", "../public/assets/crops/wheat/wheat-stage-3.png");
 
       // Sunflower
-      this.load.image(
-        "sunflower-stage-1",
-        "../public/assets/crops/sunflower/sunflower-stage-1.png"
-      );
+      this.load.image("sunflower-stage-1", "../public/assets/crops/sunflower/sunflower-stage-1.png");
 
-      this.load.image(
-        "sunflower-stage-2",
-        "../public/assets/crops/sunflower/sunflower-stage-2.png"
-      );
+      this.load.image("sunflower-stage-2", "../public/assets/crops/sunflower/sunflower-stage-2.png");
 
-      this.load.image(
-        "sunflower-stage-3",
-        "../public/assets/crops/sunflower/sunflower-stage-3.png"
-      );
+      this.load.image("sunflower-stage-3", "../public/assets/crops/sunflower/sunflower-stage-3.png");
     }
 
     create() {
@@ -295,6 +209,24 @@
 
       this.refreshInventoryUI();
       this.refreshQuickbar();
+
+      // Cancela timers de crescimento pendentes se a cena for
+      // encerrada/reiniciada, evitando callbacks em sprites destruídos.
+      this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.cleanupCropTimers());
+    }
+
+    cleanupCropTimers() {
+      this.gridCells.forEach((cell) => {
+        if (!cell.object || cell.object.type !== "crop") return;
+
+        if (cell.object.stageTwoTimer) {
+          cell.object.stageTwoTimer.remove(false);
+        }
+
+        if (cell.object.readyTimer) {
+          cell.object.readyTimer.remove(false);
+        }
+      });
     }
 
     // =========================
@@ -308,11 +240,7 @@
         .setDepth(-10);
 
       this.plotBase = this.add
-        .image(
-          WIDTH / 2,
-          HEIGHT / 2 + PLOT_Y_OFFSET,
-          "plot-base"
-        )
+        .image(WIDTH / 2, HEIGHT / 2 + PLOT_Y_OFFSET, "plot-base")
         .setOrigin(0.5)
         .setDisplaySize(PLOT_SIZE, PLOT_SIZE)
         .setDepth(0);
@@ -388,14 +316,7 @@
           const plantable = this.isPlantablePosition(x, y);
 
           const cell = this.add
-            .rectangle(
-              x,
-              y,
-              CELL_WIDTH,
-              CELL_HEIGHT,
-              0xffffff,
-              0
-            )
+            .rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, 0xffffff, 0)
             .setStrokeStyle(1, 0xffffff, 0)
             .setInteractive({ useHandCursor: plantable })
             .setDepth(5);
@@ -461,28 +382,17 @@
     handleCellClick(cell) {
       if (!cell.plantable) return;
 
-      if (
-        cell.occupied &&
-        cell.object &&
-        cell.object.type === "crop" &&
-        cell.object.stage === 3
-      ) {
+      if (cell.occupied && cell.object && cell.object.type === "crop" && cell.object.stage === 3) {
         this.harvestCrop(cell);
         return;
       }
 
-      if (
-        state.selectedItem.type === "seed" &&
-        !cell.occupied
-      ) {
+      if (state.selectedItem.type === "seed" && !cell.occupied) {
         this.plantCrop(cell, state.selectedItem.crop);
         return;
       }
 
-      if (
-        state.selectedItem.type === "tool" &&
-        state.selectedItem.tool === "watering-can"
-      ) {
+      if (state.selectedItem.type === "tool" && state.selectedItem.tool === "watering-can") {
         this.waterCrop(cell);
       }
     }
@@ -500,16 +410,9 @@
       state.inventory.seeds[cropId] -= 1;
 
       const sprite = this.add
-        .image(
-          cell.x,
-          cell.y,
-          cropConfig.stages[0]
-        )
+        .image(cell.x, cell.y, cropConfig.stages[0])
         .setOrigin(0.5)
-        .setDisplaySize(
-          CROP_RENDER_SIZE,
-          CROP_RENDER_SIZE
-        )
+        .setDisplaySize(CROP_RENDER_SIZE, CROP_RENDER_SIZE)
         .setDepth(8);
 
       cell.occupied = true;
@@ -529,20 +432,13 @@
     }
 
     waterCrop(cell) {
-      if (
-        !cell.occupied ||
-        !cell.object ||
-        cell.object.type !== "crop"
-      ) {
+      if (!cell.occupied || !cell.object || cell.object.type !== "crop") {
         return;
       }
 
       const cropObject = cell.object;
 
-      if (
-        cropObject.stage === 3 ||
-        cropObject.watered
-      ) {
+      if (cropObject.stage === 3 || cropObject.watered) {
         return;
       }
 
@@ -554,10 +450,7 @@
         this.time.delayedCall(
           cropConfig.stage2Ms,
           () => {
-            if (
-              !cell.object ||
-              cell.object !== cropObject
-            ) {
+            if (!cell.object || cell.object !== cropObject) {
               return;
             }
 
@@ -565,10 +458,7 @@
 
             cropObject.sprite
               .setTexture(cropConfig.stages[1])
-              .setDisplaySize(
-                CROP_RENDER_SIZE,
-                CROP_RENDER_SIZE
-              );
+              .setDisplaySize(CROP_RENDER_SIZE, CROP_RENDER_SIZE);
           }
         );
 
@@ -576,10 +466,7 @@
         this.time.delayedCall(
           cropConfig.readyMs,
           () => {
-            if (
-              !cell.object ||
-              cell.object !== cropObject
-            ) {
+            if (!cell.object || cell.object !== cropObject) {
               return;
             }
 
@@ -587,20 +474,13 @@
 
             cropObject.sprite
               .setTexture(cropConfig.stages[2])
-              .setDisplaySize(
-                CROP_RENDER_SIZE,
-                CROP_RENDER_SIZE
-              );
+              .setDisplaySize(CROP_RENDER_SIZE, CROP_RENDER_SIZE);
           }
         );
     }
 
     harvestCrop(cell) {
-      if (
-        !cell.object ||
-        cell.object.type !== "crop" ||
-        cell.object.stage !== 3
-      ) {
+      if (!cell.object || cell.object.type !== "crop" || cell.object.stage !== 3) {
         return;
       }
 
@@ -636,26 +516,14 @@
       const digits = String(level).length;
 
       if (digits === 1) {
-        return {
-          x: 94,
-          y: 63,
-          fontSize: "10px",
-        };
+        return { x: 94, y: 63, fontSize: "10px" };
       }
 
       if (digits === 2) {
-        return {
-          x: 94,
-          y: 63,
-          fontSize: "8px",
-        };
+        return { x: 94, y: 63, fontSize: "8px" };
       }
 
-      return {
-        x: 94,
-        y: 63,
-        fontSize: "7px",
-      };
+      return { x: 94, y: 63, fontSize: "7px" };
     }
 
     // =========================
@@ -668,9 +536,7 @@
         .setOrigin(0.5)
         .setDisplaySize(82, 82)
         .setDepth(30)
-        .setInteractive({
-          useHandCursor: true,
-        });
+        .setInteractive({ useHandCursor: true });
 
       const levelConfig =
         this.getLevelBadgeConfig(state.level);
@@ -755,20 +621,11 @@
           i * (QUICKBAR_SLOT_SIZE + QUICKBAR_GAP);
 
         const slotBg = this.add
-          .image(
-            QUICKBAR_X,
-            y,
-            "inventory-slot"
-          )
+          .image(QUICKBAR_X, y, "inventory-slot")
           .setOrigin(0.5)
-          .setDisplaySize(
-            QUICKBAR_SLOT_SIZE,
-            QUICKBAR_SLOT_SIZE
-          )
+          .setDisplaySize(QUICKBAR_SLOT_SIZE, QUICKBAR_SLOT_SIZE)
           .setDepth(31)
-          .setInteractive({
-            useHandCursor: true,
-          });
+          .setInteractive({ useHandCursor: true });
 
         const numberText = this.add
           .text(
@@ -789,27 +646,12 @@
           .setDepth(34);
 
         const selection = this.add
-          .rectangle(
-            QUICKBAR_X,
-            y,
-            QUICKBAR_SLOT_SIZE + 2,
-            QUICKBAR_SLOT_SIZE + 2,
-            0xffffff,
-            0
-          )
-          .setStrokeStyle(
-            3,
-            0xffd85a,
-            0
-          )
+          .rectangle(QUICKBAR_X, y, QUICKBAR_SLOT_SIZE + 2, QUICKBAR_SLOT_SIZE + 2, 0xffffff, 0)
+          .setStrokeStyle(3, 0xffd85a, 0)
           .setDepth(33);
 
         const icon = this.add
-          .image(
-            QUICKBAR_X,
-            y,
-            "inventory-slot"
-          )
+          .image(QUICKBAR_X, y, "inventory-slot")
           .setOrigin(0.5)
           .setDisplaySize(1, 1)
           .setVisible(false)
@@ -826,12 +668,7 @@
               fontStyle: "bold",
               color: "#2f1d16",
               backgroundColor: "rgba(255,255,255,0.90)",
-              padding: {
-                left: 2,
-                right: 2,
-                top: 0,
-                bottom: 0,
-              },
+              padding: { left: 2, right: 2, top: 0, bottom: 0 },
             }
           )
           .setOrigin(0.5)
@@ -843,13 +680,7 @@
           this.selectQuickSlot(i);
         });
 
-        this.quickbarViews.push({
-          slotBg,
-          numberText,
-          selection,
-          icon,
-          quantityText,
-        });
+        this.quickbarViews.push({ slotBg, numberText, selection, icon, quantityText });
       }
     }
 
@@ -860,10 +691,7 @@
         return CROPS[item.crop].seedIcon;
       }
 
-      if (
-        item.type === "tool" &&
-        item.tool === "watering-can"
-      ) {
+      if (item.type === "tool" && item.tool === "watering-can") {
         return "watering-can-icon";
       }
 
@@ -877,7 +705,19 @@
         return state.inventory.seeds[item.crop];
       }
 
+      if (item.type === "crop") {
+        return state.inventory.crops[item.crop];
+      }
+
+      // Ferramentas não têm quantidade (ex.: regador).
       return null;
+    }
+
+    // Liga/desliga o contorno amarelo de "selecionado" num slot.
+    // Usado tanto no Basket quanto na Quickbar para não repetir o
+    // mesmo setStrokeStyle(3, 0xffd85a, ...) em vários lugares.
+    setSlotSelected(strokeRect, selected) {
+      strokeRect.setStrokeStyle(3, 0xffd85a, selected ? 1 : 0);
     }
 
     sameItem(a, b) {
@@ -903,11 +743,7 @@
           if (!item) {
             view.icon.setVisible(false);
             view.quantityText.setVisible(false);
-            view.selection.setStrokeStyle(
-              3,
-              0xffd85a,
-              0
-            );
+            this.setSlotSelected(view.selection, false);
             return;
           }
 
@@ -916,10 +752,7 @@
 
           view.icon
             .setTexture(texture)
-            .setDisplaySize(
-              QUICKBAR_ICON_SIZE,
-              QUICKBAR_ICON_SIZE
-            )
+            .setDisplaySize(QUICKBAR_ICON_SIZE, QUICKBAR_ICON_SIZE)
             .setVisible(true);
 
           const quantity =
@@ -933,16 +766,7 @@
             view.quantityText.setVisible(false);
           }
 
-          view.selection.setStrokeStyle(
-            3,
-            0xffd85a,
-            this.sameItem(
-              item,
-              state.selectedItem
-            )
-              ? 1
-              : 0
-          );
+          this.setSlotSelected(view.selection, this.sameItem(item, state.selectedItem));
         }
       );
     }
@@ -951,25 +775,18 @@
       const item = state.quickSlots[index];
       if (!item) return;
 
-      state.selectedItem = {
-        ...item,
-      };
+      state.selectedItem = { ...item };
 
       this.refreshInventorySelection();
       this.refreshQuickbar();
     }
 
     assignQuickSlot(index, item) {
-      if (
-        index < 0 ||
-        index >= QUICKBAR_SLOTS
-      ) {
+      if (index < 0 || index >= QUICKBAR_SLOTS) {
         return;
       }
 
-      state.quickSlots[index] = {
-        ...item,
-      };
+      state.quickSlots[index] = { ...item };
 
       this.hideQuickAccessMenu();
       this.refreshQuickbar();
@@ -980,35 +797,18 @@
     // =========================
     createBasket() {
       this.basketPanel = this.add
-        .container(
-          WIDTH / 2,
-          HEIGHT / 2
-        )
+        .container(WIDTH / 2, HEIGHT / 2)
         .setDepth(200)
         .setVisible(false);
 
       const overlay = this.add
-        .rectangle(
-          0,
-          0,
-          WIDTH,
-          HEIGHT,
-          0x102014,
-          0.42
-        )
+        .rectangle(0, 0, WIDTH, HEIGHT, 0x102014, 0.42)
         .setInteractive();
 
       const inventoryBg = this.add
-        .image(
-          0,
-          0,
-          "inventory-bg"
-        )
+        .image(0, 0, "inventory-bg")
         .setOrigin(0.5)
-        .setDisplaySize(
-          INVENTORY_WIDTH,
-          INVENTORY_HEIGHT
-        );
+        .setDisplaySize(INVENTORY_WIDTH, INVENTORY_HEIGHT);
 
       const title = this.add
         .text(
@@ -1032,36 +832,16 @@
           341,
           -181,
           "X",
-          {
-            fontFamily: FONT_FAMILY,
-            fontSize: "26px",
-            fontStyle: "bold",
-            color: "#34190f",
-          }
+          { fontFamily: FONT_FAMILY, fontSize: "26px", fontStyle: "bold", color: "#34190f" }
         )
         .setOrigin(0.5)
         .setResolution(4);
 
       const closeHit = this.add
-        .rectangle(
-          341,
-          -181,
-          46,
-          46,
-          0xffffff,
-          0.001
-        )
-        .setInteractive({
-          useHandCursor: true,
-        });
+        .rectangle(341, -181, 46, 46, 0xffffff, 0.001)
+        .setInteractive({ useHandCursor: true });
 
-      this.basketPanel.add([
-        overlay,
-        inventoryBg,
-        title,
-        closeText,
-        closeHit,
-      ]);
+      this.basketPanel.add([overlay, inventoryBg, title, closeText, closeHit]);
 
       this.createInventorySlots();
       this.createInventoryItems();
@@ -1096,11 +876,7 @@
             INVENTORY_SLOT_START_Y +
             row * INVENTORY_SLOT_GAP_Y;
 
-          this.inventorySlots.push({
-            index,
-            x,
-            y,
-          });
+          this.inventorySlots.push({ index, x, y });
         }
       }
     }
@@ -1189,95 +965,46 @@
       const slotBg = this.add
         .image(0, 0, "inventory-slot")
         .setOrigin(0.5)
-        .setDisplaySize(
-          INVENTORY_SLOT_SIZE,
-          INVENTORY_SLOT_SIZE
-        );
+        .setDisplaySize(INVENTORY_SLOT_SIZE, INVENTORY_SLOT_SIZE);
 
       const icon = this.add
         .image(0, -2, config.texture)
         .setOrigin(0.5)
-        .setDisplaySize(
-          config.iconSize,
-          config.iconSize
-        );
+        .setDisplaySize(config.iconSize, config.iconSize);
 
       const quantityBg = this.add
-        .rectangle(
-          18,
-          18,
-          27,
-          20,
-          0xfff4dd,
-          1
-        )
-        .setStrokeStyle(
-          2,
-          0x5c3425,
-          1
-        );
+        .rectangle(18, 18, 27, 20, 0xfff4dd, 1)
+        .setStrokeStyle(2, 0x5c3425, 1);
 
       const quantityText = this.add
         .text(
           18,
           18,
           "",
-          {
-            fontFamily: FONT_FAMILY,
-            fontSize: "15px",
-            fontStyle: "bold",
-            color: "#24120d",
-          }
+          { fontFamily: FONT_FAMILY, fontSize: "15px", fontStyle: "bold", color: "#24120d" }
         )
         .setOrigin(0.5)
         .setResolution(4);
 
       const selection = this.add
-        .rectangle(
-          0,
-          0,
-          INVENTORY_SLOT_SIZE - 2,
-          INVENTORY_SLOT_SIZE - 2,
-          0xffffff,
-          0
-        )
-        .setStrokeStyle(
-          3,
-          0xffd85a,
-          0
-        );
+        .rectangle(0, 0, INVENTORY_SLOT_SIZE - 2, INVENTORY_SLOT_SIZE - 2, 0xffffff, 0)
+        .setStrokeStyle(3, 0xffd85a, 0);
 
       const hit = this.add
-        .rectangle(
-          0,
-          0,
-          INVENTORY_SLOT_SIZE,
-          INVENTORY_SLOT_SIZE,
-          0xffffff,
-          0.001
-        );
+        .rectangle(0, 0, INVENTORY_SLOT_SIZE, INVENTORY_SLOT_SIZE, 0xffffff, 0.001);
 
       const selectable =
         config.selectable !== false;
 
       if (selectable) {
-        hit.setInteractive({
-          useHandCursor: true,
-        });
+        hit.setInteractive({ useHandCursor: true });
 
         hit.on(
           "pointerdown",
           (pointer) => {
             // Botão direito = acesso rápido.
-            if (
-              pointer.rightButtonDown &&
-              pointer.rightButtonDown()
-            ) {
-              this.showQuickAccessMenu(
-                slot.x,
-                slot.y,
-                config
-              );
+            if (pointer.rightButtonDown && pointer.rightButtonDown()) {
+              this.showQuickAccessMenu(slot.x, slot.y, config);
               return;
             }
 
@@ -1285,17 +1012,11 @@
             this.hideQuickAccessMenu();
 
             if (config.type === "seed") {
-              state.selectedItem = {
-                type: "seed",
-                crop: config.crop,
-              };
+              state.selectedItem = { type: "seed", crop: config.crop };
             }
 
             if (config.type === "tool") {
-              state.selectedItem = {
-                type: "tool",
-                tool: config.tool,
-              };
+              state.selectedItem = { type: "tool", tool: config.tool };
             }
 
             this.refreshInventorySelection();
@@ -1304,102 +1025,59 @@
         );
       }
 
-      container.add([
-        slotBg,
-        selection,
-        icon,
-        quantityBg,
-        quantityText,
-        hit,
-      ]);
+      container.add([slotBg, selection, icon, quantityBg, quantityText, hit]);
 
       this.basketPanel.add(container);
 
-      this.inventoryItemViews[config.key] = {
-        ...config,
-        container,
-        slotBg,
-        icon,
-        quantityBg,
-        quantityText,
-        selection,
-      };
+      this.inventoryItemViews[config.key] = { ...config, container, slotBg, icon, quantityBg, quantityText, selection };
     }
 
     showQuickAccessMenu(x, y, config) {
       this.hideQuickAccessMenu();
 
       const menu = this.add
-        .container(x + 102, y + 22)
+        .container(x + QUICK_ACCESS_MENU_OFFSET_X, y + QUICK_ACCESS_MENU_OFFSET_Y)
         .setDepth(260);
 
       const panel = this.add
-        .rectangle(
-          0,
-          0,
-          170,
-          95,
-          0xffe0b3,
-          1
-        )
-        .setStrokeStyle(
-          3,
-          0x75462f,
-          1
-        );
+        .rectangle(0, 0, QUICK_ACCESS_PANEL_WIDTH, QUICK_ACCESS_PANEL_HEIGHT, 0xffe0b3, 1)
+        .setStrokeStyle(3, 0x75462f, 1);
 
       const label = this.add
         .text(
           0,
-          -28,
+          QUICK_ACCESS_LABEL_Y,
           "Add to quick access",
-          {
-            fontFamily: FONT_FAMILY,
-            fontSize: "14px",
-            fontStyle: "bold",
-            color: "#3a241d",
-          }
+          { fontFamily: FONT_FAMILY, fontSize: "14px", fontStyle: "bold", color: "#3a241d" }
         )
         .setOrigin(0.5)
         .setResolution(2);
 
-      menu.add([
-        panel,
-        label,
-      ]);
+      menu.add([panel, label]);
 
       for (let i = 0; i < QUICKBAR_SLOTS; i += 1) {
-        const buttonX = -58 + i * 29;
+        const buttonX =
+          QUICK_ACCESS_BUTTON_START_X +
+          i * QUICK_ACCESS_BUTTON_GAP;
 
         const button = this.add
           .rectangle(
             buttonX,
-            18,
-            24,
-            24,
+            QUICK_ACCESS_BUTTON_Y,
+            QUICK_ACCESS_BUTTON_SIZE,
+            QUICK_ACCESS_BUTTON_SIZE,
             0xffc87a,
             1
           )
-          .setStrokeStyle(
-            2,
-            0x75462f,
-            1
-          )
-          .setInteractive({
-            useHandCursor: true,
-          });
+          .setStrokeStyle(2, 0x75462f, 1)
+          .setInteractive({ useHandCursor: true });
 
         const number = this.add
           .text(
             buttonX,
-            18,
+            QUICK_ACCESS_BUTTON_Y,
             `${i + 1}`,
-            {
-              fontFamily: FONT_FAMILY,
-              fontSize: "13px",
-              fontStyle: "bold",
-              color: "#3a241d",
-            }
+            { fontFamily: FONT_FAMILY, fontSize: "13px", fontStyle: "bold", color: "#3a241d" }
           )
           .setOrigin(0.5)
           .setResolution(2);
@@ -1407,25 +1085,13 @@
         button.on("pointerdown", () => {
           const item =
             config.type === "seed"
-              ? {
-                  type: "seed",
-                  crop: config.crop,
-                }
-              : {
-                  type: "tool",
-                  tool: config.tool,
-                };
+              ? { type: "seed", crop: config.crop }
+              : { type: "tool", tool: config.tool };
 
-          this.assignQuickSlot(
-            i,
-            item
-          );
+          this.assignQuickSlot(i, item);
         });
 
-        menu.add([
-          button,
-          number,
-        ]);
+        menu.add([button, number]);
       }
 
       this.quickAccessMenu = menu;
@@ -1440,9 +1106,7 @@
     }
 
     refreshInventoryUI() {
-      Object.values(
-        this.inventoryItemViews
-      ).forEach((view) => {
+      Object.values(this.inventoryItemViews).forEach((view) => {
         let quantity = 1;
 
         if (view.type === "seed") {
@@ -1459,14 +1123,10 @@
           quantity = 1;
         }
 
-        view.quantityText.setText(
-          `${quantity}`
-        );
+        view.quantityText.setText(`${quantity}`);
 
         if (view.type === "crop") {
-          view.container.setVisible(
-            quantity > 0
-          );
+          view.container.setVisible(quantity > 0);
         } else {
           view.container.setVisible(true);
         }
@@ -1476,34 +1136,22 @@
     }
 
     refreshInventorySelection() {
-      Object.values(
-        this.inventoryItemViews
-      ).forEach((view) => {
+      Object.values(this.inventoryItemViews).forEach((view) => {
         let selected = false;
 
-        if (
-          view.type === "seed" &&
-          state.selectedItem.type === "seed"
-        ) {
+        if (view.type === "seed" && state.selectedItem.type === "seed") {
           selected =
             view.crop ===
             state.selectedItem.crop;
         }
 
-        if (
-          view.type === "tool" &&
-          state.selectedItem.type === "tool"
-        ) {
+        if (view.type === "tool" && state.selectedItem.type === "tool") {
           selected =
             view.tool ===
             state.selectedItem.tool;
         }
 
-        view.selection.setStrokeStyle(
-          3,
-          0xffd85a,
-          selected ? 1 : 0
-        );
+        this.setSlotSelected(view.selection, selected);
       });
     }
 
@@ -1519,9 +1167,7 @@
         this.hideQuickAccessMenu();
       }
 
-      this.basketPanel.setVisible(
-        shouldShow
-      );
+      this.basketPanel.setVisible(shouldShow);
 
       if (shouldShow) {
         this.refreshInventoryUI();
@@ -1537,29 +1183,17 @@
     backgroundColor: "#8bcf68",
     scene: SeedhavenScene,
 
-    scale: {
-      mode: Phaser.Scale.FIT,
-      autoCenter:
-        Phaser.Scale.CENTER_BOTH,
-    },
+    scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
 
-    render: {
-      antialias: false,
-      pixelArt: true,
-    },
+    render: { antialias: false, pixelArt: true },
   };
 
   const startGame = () => {
     new Phaser.Game(config);
   };
 
-  if (
-    document.fonts &&
-    document.fonts.ready
-  ) {
-    document.fonts.ready.then(
-      startGame
-    );
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(startGame);
   } else {
     startGame();
   }
